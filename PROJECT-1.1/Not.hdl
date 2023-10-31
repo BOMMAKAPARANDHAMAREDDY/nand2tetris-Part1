@@ -1,4 +1,4 @@
-// This file is part of www.nand2tetris.org
+//nand2tetrisd2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
 // File name: projects/01/Not.hdl
@@ -11,5 +11,6 @@ CHIP Not {
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // Not gate using Nand
+    Nand(a=in, b=in, out=out);
 }
