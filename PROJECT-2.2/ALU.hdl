@@ -5,7 +5,7 @@
 
 /**
  * The ALU. Computes one of the following functions:
- * x+y, x-y, y–x, 0, 1, -1, x, y, -x, -y, !x, !y,
+ * x+y, x-y, yï¿½x, 0, 1, -1, x, y, -x, -y, !x, !y,
  * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs.
  * Which function to compute is determined by 6 input bits 
  * denoted zx, nx, zy, ny, f, no.
@@ -52,4 +52,25 @@ CHIP ALU {
         ng; // 1 if out<0, 0 otherwise
 
     BUILTIN ALU;
+     PARTS:
+
+Mux16(a=x,b[0..15]=false,sel=zx,out=zdx);
+Not16(in=zdx,out=notx);                  
+Mux16(a=zdx,b=notx,sel=nx,out=ndx);     
+
+Mux16(a=y,b[0..15]=false,sel=zy,out=zdy);
+Not16(in=zdy,out=noty);
+Mux16(a=zdy,b=noty,sel=ny,out=ndy);
+
+Add16(a=ndx,b=ndy,out=xplusy); 
+And16(a=ndx,b=ndy,out=xandy); 
+Mux16(a=xandy,b=xplusy,sel=f,out=fxy); 
+
+Not16(in=fxy,out=nfxy);      
+Mux16(a=fxy,b=nfxy,sel=no,out=oo);  
+
+
+And16(a[0..15]=true,b=oo,out[15]=ng,out[0..14]=drop); //ng
+
+Or16(a=oo,b[0..15]=false,out=out); //oo=output
 }
